@@ -13,6 +13,8 @@ import FaceTrackerComponent from "./components/FaceTrackerComponent";
 import MoodComponent from "./components/MoodComponent";
 import EmotionBarsComponent from "./components/EmotionBarsComponent";
 
+import Player from "./components/Player"
+
 function App() {
 
   const mphToolsState = useExternalScript("https://sdk.morphcast.com/mphtools/v1.0/mphtools.js");
@@ -57,7 +59,8 @@ function App() {
           <hr className="solid" style={{width:"100%"}}></hr>
           <EmotionBarsComponent></EmotionBarsComponent>
           <hr className="solid" style={{width:"100%"}}></hr>
-          
+          <Player></Player>
+          <hr className="solid" style={{width:"100%"}}></hr>
         </div>
       </header>
     </div>
