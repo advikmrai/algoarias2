@@ -15,6 +15,7 @@ import EmotionBarsComponent from "./components/EmotionBarsComponent";
 
 import Player from "./components/Player"
 
+
 function App() {
 
   const mphToolsState = useExternalScript("https://sdk.morphcast.com/mphtools/v1.0/mphtools.js");
@@ -31,6 +32,19 @@ function App() {
       });
         await start();
         
+        // Add event listener to capture and save data
+        window.addEventListener(CY.modules().EVENT_BARRIER.eventName, (event) => {
+          const data = event.detail;
+          
+          // Save data to data.json
+          const jsonData = JSON.stringify(data, null, 2); 
+          const blob = new Blob([jsonData], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = 'data.json';
+          link.click();
+        });
       }
      
     }
