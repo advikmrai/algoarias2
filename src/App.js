@@ -36,6 +36,13 @@ function App() {
         window.addEventListener(CY.modules().EVENT_BARRIER.eventName, (event) => {
           const data = event.detail;
           
+          // Exclude the "data" field from the "faces" array within the "face_detector" object
+          if (data.face_detector && data.face_detector.faces) {
+            data.face_detector.faces.forEach(face => {
+              delete face.data;
+            });
+          }
+          
           // Save data to data.json
           const jsonData = JSON.stringify(data, null, 2); 
           const blob = new Blob([jsonData], { type: 'application/json' });
@@ -43,7 +50,7 @@ function App() {
           const link = document.createElement('a');
           link.href = url;
           link.download = 'data.json';
-          link.click();
+          link.click(); 
         });
       }
      
