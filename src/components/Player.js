@@ -13,7 +13,8 @@ import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
 
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:2387505035.
-import dross1 from '../assets/dross1.mp3';
+// import dross1 from '../assets/dross1.mp3';
+import Vicissitudes from '../assets/Vicissitudes.mp3'
 
 const WallPaper = styled('div')({
   position: 'absolute',
@@ -79,7 +80,7 @@ const TinyText = styled(Typography)({
 });
 
 export default function MusicPlayerSlider() {
-  const audioRef = React.useRef(new Audio(dross1));
+  const audioRef = React.useRef(new Audio(Vicissitudes));
   const [paused, setPaused] = React.useState(true);
   const [position, setPosition] = React.useState(0);
   const [volume, setVolume] = React.useState(0.5);
@@ -106,6 +107,12 @@ export default function MusicPlayerSlider() {
       audio.pause();
     }
     setPaused(!paused);
+
+    // Dispatch a custom event
+    const playStatusChangedEvent = new CustomEvent('play-status-changed', {
+      detail: { isPlaying: !paused },
+    });
+    audioRef.current.dispatchEvent(playStatusChangedEvent);
   };
 
   const handlePositionChange = (_, value) => {
@@ -127,7 +134,7 @@ export default function MusicPlayerSlider() {
           <CoverImage>
             <img
               alt='Album cover'
-              src='../assets/Diana_Ross_(1976_album_-_cover_art).jpg'
+              src='../assets/900x520_piano-min.jpeg'
             />
           </CoverImage>
           <Box sx={{ ml: 1.5, minWidth: 0 }}>
@@ -135,10 +142,10 @@ export default function MusicPlayerSlider() {
               variant="caption"
               sx={{ color: 'text.secondary', fontWeight: 500 }}
             >
-              Diana Ross
+              Advik Rai
             </Typography>
             <Typography noWrap>
-              <b>I Thought It Took a Little Time</b>
+              <b>Piano File</b>
             </Typography>
           </Box>
         </Box>
