@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { forwardRef, useImperativeHandle } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -12,7 +12,6 @@ import FastRewindRounded from '@mui/icons-material/FastRewindRounded';
 import VolumeUpRounded from '@mui/icons-material/VolumeUpRounded';
 import VolumeDownRounded from '@mui/icons-material/VolumeDownRounded';
 
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2387505035.
 // import dross1 from '../assets/dross1.mp3';
 import Vicissitudes from '../assets/Vicissitudes.mp3'
 
@@ -79,8 +78,15 @@ const TinyText = styled(Typography)({
   letterSpacing: 0.2,
 });
 
-export default function MusicPlayerSlider() {
-  const audioRef = React.useRef(new Audio(Vicissitudes));
+const MusicPlayerSlider = forwardRef((props, ref) => {
+  const audioRef = React.useRef(new Audio(Vicissitudes))
+  //making audioRef accessible from the parent
+  useImperativeHandle(ref, () => ({
+    getAudio: () => {
+      return audioRef.current;
+    }
+  }));
+
   const [paused, setPaused] = React.useState(true);
   const [position, setPosition] = React.useState(0);
   const [volume, setVolume] = React.useState(0.5);
@@ -128,7 +134,7 @@ export default function MusicPlayerSlider() {
   };
 
   return (
-    <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: 3 }}>
+    <Box sx={{ width: '100%', overflow: 'hidden', position: 'relative', p: 2 }}>
       <Widget>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <CoverImage>
@@ -201,4 +207,6 @@ export default function MusicPlayerSlider() {
       <WallPaper />
     </Box>
   );
-}
+});
+
+export default MusicPlayerSlider;

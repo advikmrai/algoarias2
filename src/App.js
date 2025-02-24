@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useExternalScript } from "./helpers/ai-sdk/externalScriptsLoader";
 import { getAiSdkControls } from "./helpers/ai-sdk/loader";
 
@@ -24,72 +24,71 @@ function App() {
   const aiSdkState = useExternalScript("https://ai-sdk.morphcast.com/v1.16/ai-sdk.js");
   const videoEl = useRef(undefined)
   const playerRef = useRef(null); 
+  const [isRecording, setIsRecording] = useState(false);
+
+   const handlePlayStatusChange = useCallback((event) => {
+     setIsRecording(event.detail.isPlaying);
+   }, []);
+
+
+  const handleBarrierEvent = useCallback((event) => {
+    const data = event.detail;
+
+    if (data.face_detector && data.face_detector.faces) {
+      data.face_detector.faces.forEach(face => {
+        delete face.data;
+      });
+    }
+
+    const currentTime = playerRef.current?.getAudio()?.currentTime || 0;
+    data.audio_current_time = currentTime;
+    const jsonData = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'data.json';
+
+    if (!isRecording) {
+      link.click();
+    }
+  }, [isRecording]);
+
 
   useEffect(() => {
-    let isRecording = false; 
     videoEl.current = document.getElementById("videoEl");
-    async function getAiSdk (){
-      if(aiSdkState === "ready" && mphToolsState === "ready"){
-        const { source, start } = await getAiSdkControls();
-      await source.useCamera({
-        toVideoElement: document.getElementById("videoEl"),
-      });
-        await start();
-        
-        /*
-        // Using playerRef to access the player element
-        useEffect(() => {
-          const player = playerRef.current;
-          if (player) {
-            const handlePlayStatusChange = (event) => {
-              isRecording = event.detail.isPlaying;
-              if (isRecording) {
-                console.log(JSON.stringify({ event: 'audio_playing' }));
-              }
-            };
-            player.addEventListener('play-status-changed', handlePlayStatusChange);
-            return () => {
-              player.removeEventListener('play-status-changed', handlePlayStatusChange);
-            };
+    let aiSdkLoaded = false
+
+    const loadAiSdk = async () => {
+      if (aiSdkState === "ready" && mphToolsState === "ready") {
+        if (!aiSdkLoaded) {
+          const { source, start } = await getAiSdkControls();
+          await source.useCamera({
+            toVideoElement: document.getElementById("videoEl"),
+          });
+          await start();
+          aiSdkLoaded = true;
+          if (playerRef.current?.getAudio()) {
+            playerRef.current.getAudio().addEventListener("play-status-changed", handlePlayStatusChange);
+            window.addEventListener(CY.modules().EVENT_BARRIER.eventName, handleBarrierEvent);
           }
-        }, [playerRef.current]);
-        */
-        // Start observing the document body for changes
-        //playerObserver.observe(document.body, { childList: true, subtree: true });
-
-
-        // Event listener to capture and save data, but only if recording is active
-        window.addEventListener(CY.modules().EVENT_BARRIER.eventName, (event) => {  
-     //     if (isRecording) {
-          const data = event.detail;
-          data.audio_current_time = playerRef.current?.audioRef?.current?.currentTime || null; 
-
-              // Exclude the "data" field from the "faces" array within the "face_detector" object
-              if (data.face_detector && data.face_detector.faces) {
-                data.face_detector.faces.forEach(face => {
-                  delete face.data;
-                });
-              }
-
-              // Save data to data.json
-              const jsonData = JSON.stringify(data, null, 2);
-              const blob = new Blob([jsonData], { type: 'application/json' });
-              const url = URL.createObjectURL(blob);
-              const link = document.createElement('a');
-              link.href = url;
-              link.download = 'data.json';
-              link.click();
-      //    }
-        }); 
+        }
       }
-     
-    }
-    getAiSdk();
-  }, [aiSdkState, mphToolsState]);
+    };
+
+    loadAiSdk();
+
+    return () => {
+      if(playerRef.current?.getAudio()){
+        playerRef.current.getAudio().removeEventListener("play-status-changed", handlePlayStatusChange);
+        window.removeEventListener(CY.modules().EVENT_BARRIER.eventName, handleBarrierEvent);
+      }
+    };
+  }, [aiSdkState, mphToolsState, handlePlayStatusChange, handleBarrierEvent]);
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header" >
         <div style={{display:"flex", flexDirection: "column", alignItems:"center"}}>
           <div style={{width:"640px", height: "480px", position:"relative"}}>
             <video id="videoEl"></video>
@@ -108,7 +107,7 @@ function App() {
           <MoodComponent></MoodComponent>
           <hr className="solid" style={{width:"100%"}}></hr>
           <EmotionBarsComponent></EmotionBarsComponent>
-          <hr className="solid" style={{width:"100%"}}></hr>
+          <hr className="solid" style={{width:"100%", marginTop: "20px"}}></hr>
           <Player ref={playerRef}></Player> 
           <hr className="solid" style={{width:"100%"}}></hr>
         </div>

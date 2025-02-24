@@ -1,0 +1,34 @@
+Co<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Document</title>
+<style>
+   body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+   }
+   .result {
+      font-size: 20px;
+      font-weight: 500;
+   }
+</style>
+</head>
+<body>
+<h1>Show Current time stamp of an HTML audio player</h1>
+<audio
+class="audio" src="C:\Users\titan\Downloads\sample.mp3" controls></audio>
+<div style="color: green;" class="result"></div>
+<button class="Btn">CLICK HERE</button>
+<h3>Click on the above button to get the audio timestamp</h3>
+<script>
+   let resEle = document.querySelector(".result");
+   let BtnEle = document.querySelector(".Btn");
+   let audioEle = document.querySelector(".audio");
+   BtnEle.addEventListener("click", () => {
+      resEle.innerHTML = "Minutes = " + Math.floor(audioEle.currentTime / 60) + "";
+      resEle.innerHTML += "Seconds = " + Math.floor(audioEle.currentTime % 60) + "";
+   });
+</script>
+</body>
+</html>
