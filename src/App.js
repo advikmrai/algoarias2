@@ -42,18 +42,19 @@ function App() {
 
     const currentTime = playerRef.current?.getAudio()?.currentTime || 0;
     data.audio_current_time = currentTime;
-    const jsonData = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'data.json';
-
-    if (!isRecording) {
-      link.click();
-    }
+    // Commented out the code that downloads the json file
+    // const jsonData = JSON.stringify(data, null, 2);
+    // const blob = new Blob([jsonData], { type: 'application/json' });
+    // const url = URL.createObjectURL(blob);
+    // const link = document.createElement('a');
+    // link.href = url;
+    // link.download = 'data.json';
+    //
+    // if (!isRecording) {
+    //   link.click();
+    // }
   }, [isRecording]);
-
+  
 
   useEffect(() => {
     videoEl.current = document.getElementById("videoEl");
