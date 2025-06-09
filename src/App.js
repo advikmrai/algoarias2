@@ -55,26 +55,26 @@ function App() {
 
 
         // Event listener to capture and save data
-        window.addEventListener(CY.modules().EVENT_BARRIER.eventName, (event) => {
-            const data = event.detail;
+        // window.addEventListener(CY.modules().EVENT_BARRIER.eventName, (event) => {
+        //     const data = event.detail;
             
-            // Check if the audio element exists and get the current time
-            if (audioElement && !audioElement.paused) {
-                data.audio_current_time = Math.floor(audioElement.currentTime);
-            } else {
-                data.audio_current_time = null;
-            }
+        //     // Check if the audio element exists and get the current time
+        //     if (audioElement && !audioElement.paused) {
+        //         data.audio_current_time = Math.floor(audioElement.currentTime);
+        //     } else {
+        //         data.audio_current_time = null;
+        //     }
 
-          // Exclude the "data" field from the "faces" array within the "face_detector" object
-          if (data.face_detector && data.face_detector.faces) {
-            data.face_detector.faces.forEach(face => {
-              delete face.data;
-            });
-          }
+        //   // Exclude the "data" field from the "faces" array within the "face_detector" object
+        //   if (data.face_detector && data.face_detector.faces) {
+        //     data.face_detector.faces.forEach(face => {
+        //       delete face.data;
+        //     });
+        //   }
 
-            allData.push(data);
+        //     allData.push(data);
         
-        });
+        // });
       }
 
     }
