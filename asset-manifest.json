@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/algoarias2/static/css/main.51d8ef85.css",
+    "main.js": "/algoarias2/static/js/main.7b897575.js",
+    "static/js/787.48665cef.chunk.js": "/algoarias2/static/js/787.48665cef.chunk.js",
+    "static/media/Vicissitudes.mp3": "/algoarias2/static/media/Vicissitudes.263b2dc9a104eb88272e.mp3",
+    "index.html": "/algoarias2/index.html",
+    "main.51d8ef85.css.map": "/algoarias2/static/css/main.51d8ef85.css.map",
+    "main.7b897575.js.map": "/algoarias2/static/js/main.7b897575.js.map",
+    "787.48665cef.chunk.js.map": "/algoarias2/static/js/787.48665cef.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.51d8ef85.css",
+    "static/js/main.7b897575.js"
+  ]
+}
