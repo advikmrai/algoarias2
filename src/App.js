@@ -16,8 +16,6 @@ import EmotionBarsComponent from "./components/EmotionBarsComponent";
 import Player from "./components/Player";
 import { React } from 'react';
 
-
-
 function App() {
 
   const mphToolsState = useExternalScript("https://sdk.morphcast.com/mphtools/v1.0/mphtools.js");
@@ -30,17 +28,17 @@ function App() {
 
   // Function to download the data and clear the array
   const downloadData = useCallback(() => {
-    const jsonData = JSON.stringify(allData, null, 2);
-    const blob = new Blob([jsonData], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `data-${new Date().toISOString()}.json`; // Unique file name
-    link.click();
+     const jsonData = JSON.stringify(allData, null, 2);
+     const blob = new Blob([jsonData], { type: 'application/json' });
+     const url = URL.createObjectURL(blob);
+     const link = document.createElement('a');
+    //  link.href = url;
+    //  link.download = `data-${new Date().toISOString()}.json`; // Unique file name
+    //  link.click();
 
-    // Clear the array after download
-    allData.length = 0;
-  }, [allData]);
+  //   // Clear the array after download
+     allData.length = 0;
+   }, [allData]);
 
   useEffect(() => {
     let isRecording = false;

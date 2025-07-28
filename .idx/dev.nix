@@ -16,7 +16,7 @@
           "start"
         ];
         env = {
-          PORT = "$PORT";
+          PORT = "3000";
         };
         manager = "web";
       };
